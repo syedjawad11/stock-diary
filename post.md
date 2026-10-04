@@ -1,6 +1,6 @@
 ---
 title: I Built a Roman Urdu Stock Book for My Friend's Grocery Store
-published: false
+published: true
 tags: devchallenge, weekendchallenge, hf26challenge, ai
 cover_image: https://raw.githubusercontent.com/syedjawad11/stock-diary/main/docs/cover.png
 ---

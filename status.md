@@ -1,7 +1,7 @@
 # Status: HF26 Stock Diary (workspace memory)
 
 Read this first when resuming. Update it at every milestone or break.
-Last updated: Sun 4 Oct 2026, ~16:00 Malta. Hamza Mart upgrade shipped and live. Jawad on a short break.
+Last updated: Sun 4 Oct 2026, evening Malta. SUBMITTED: post published on DEV. Session closed.
 
 ## Deadline
 - Submission closes Mon 5 Oct 06:59 UTC (08:59 Malta).
@@ -39,16 +39,15 @@ Last updated: Sun 4 Oct 2026, ~16:00 Malta. Hamza Mart upgrade shipped and live.
       Cover at docs/cover.png (raw GitHub URL in front matter). README credits/limits + MIT LICENSE done.
       Video https://youtu.be/s6pBkxYO72M embedded; Hamza details added (childhood friend, paper register +
       memory, showing him this week). Post complete: Jawad pastes into DEV, previews, publishes.
+- [x] POST PUBLISHED: https://dev.to/syed_jawad_ead7feefa5b789/i-built-a-roman-urdu-stock-book-for-my-friends-grocery-store-3bba
+      (DEV shows tags devchallenge, weekendchallenge, hf26challenge; `ai` optional.)
 - [x] Doubled-bracket fix in low-stock answers + README "Try it live" (Codex, verified)
 
 ## Next (in order)
-1. Jawad reviews the new UI on his phone (EN + Urdu); fix what feels wrong. Redeploy by API after any push.
-2. README: credits, known limits, MIT licence (check LICENSE exists). Features section already done.
-3. Final Sol check of the whole repo diff before freeze (upgrade diff already reviewed at 15:40).
-5. Demo video done; Jawad to watch and upload to YouTube (unlisted).
-6. Code freeze ~20:00.
-7. post.md: Codex worker drafts from the template, Claude edits, Sol critiques. Tags: devchallenge, weekendchallenge, hf26challenge.
-8. Publish ~23:00. Optional: Entire capture, ElevenLabs narration.
+1. Jawad shares the post (LinkedIn/X) and invites questions in the comments.
+2. Jawad shows Stock Diary to Hamza this week; post his real reaction as a comment on the post (never invent it).
+3. Any commit after Mon 5 Oct 06:59 UTC must be listed in README (DEV rule).
+4. Local uvicorn on :8010 (Ollama demo) stopped at session end.
 
 ## Prize categories we enter
 Gemma, Render, GitHub Copilot (via Actions CI), Entire (if painless), ElevenLabs (optional). Skip the rest.
