@@ -59,7 +59,7 @@ const STRINGS = {
     appTitle: "Hamza Mart",
     langEnglish: "English",
     langUrdu: "اردو",
-    subtitle: "Warehouse stock account",
+    subtitle: "Shop stock account",
     reset: "Reset",
     resetConfirm:
       "Reset your demo stock? This clears your entries and brings back the starting stock.",
@@ -160,7 +160,7 @@ const STRINGS = {
     appTitle: "حمزہ مارٹ",
     langEnglish: "English",
     langUrdu: "اردو",
-    subtitle: "گودام سٹاک کھاتہ",
+    subtitle: "دکان کا سٹاک کھاتہ",
     reset: "ریسٹ",
     resetConfirm:
       "اپنا ڈیمو اسٹاک ریسٹ کریں؟ اس سے آپ کے اندراجات مٹ جائیں گے اور ابتدائی اسٹاک واپس آ جائے گا۔",
