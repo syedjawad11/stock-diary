@@ -31,17 +31,17 @@ Last updated: Sun 4 Oct 2026, ~16:00 Malta. Hamza Mart upgrade shipped and live.
       warehouse UI (desktop + phone, EN/UR). Sol reviewed; its 3 findings fixed. Live smoke passed on Cloudflare Gemma.
 - [x] 16:30 Correction: Hamza is real and THE friend (grocery store Hamza Mart). UI/README/prompts fixed,
       parse spike 12/12 on both backends, deployed (58e08ec), live wording verified.
-- [x] Demo video pipeline (scratchpad/video: script.json, record.js, tts.sh, assemble.py). Silent captioned
-      preview at media/stock-diary-demo-silent-preview.mp4 (2:07, git-ignored). Waiting on ELEVENLABS_API_KEY
-      in .env + Jawad's OK on narration, then: ./tts.sh; node record.js; python3 assemble.py.
-      Local scene needs uvicorn on :8010 with MODEL_BACKEND=ollama and empty CF keys.
+- [x] Header now "Shop stock account" / دکان کا سٹاک کھاتہ (1a73991, deployed, verified).
+- [x] Demo video DONE: media/stock-diary-demo.mp4 (2:00, 1280x720, ElevenLabs voice, captions; git-ignored).
+      Both backends shown (Cloudflare live + local Ollama). Pipeline in scratchpad/video
+      (script.json, record.js, tts.sh, assemble.py). Next: Jawad watches it, uploads to YouTube unlisted.
 - [x] Doubled-bracket fix in low-stock answers + README "Try it live" (Codex, verified)
 
 ## Next (in order)
 1. Jawad reviews the new UI on his phone (EN + Urdu); fix what feels wrong. Redeploy by API after any push.
 2. README: credits, known limits, MIT licence (check LICENSE exists). Features section already done.
 3. Final Sol check of the whole repo diff before freeze (upgrade diff already reviewed at 15:40).
-5. Record the demo video (60–90 s).
+5. Demo video done; Jawad to watch and upload to YouTube (unlisted).
 6. Code freeze ~20:00.
 7. post.md: Codex worker drafts from the template, Claude edits, Sol critiques. Tags: devchallenge, weekendchallenge, hf26challenge.
 8. Publish ~23:00. Optional: Entire capture, ElevenLabs narration.
