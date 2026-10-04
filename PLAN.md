@@ -148,3 +148,17 @@ costs build time the post needs more.
   Upgrade to Starter (paid from the $50 credit) if Jawad adds a card.
 - 4 Oct ~15:00: Low-stock answers changed to "name: qty; ..." so names
   that already contain brackets don't double them (Codex worker, 22 tests green).
+- 4 Oct ~15:15: Jawad: the app looks too simple. Asked for a professional
+  warehouse-account feel for a fictional retail shop "Hamza Mart", manual
+  add/remove stock, adding new products, and more AI; login skipped. GPT-6.1
+  Sol brainstorm (`.agent/reviews/20261004-1515-ideas.md`) ranked ideas by
+  value/cost. Adopted: Hamza Mart branding, desktop warehouse layout, overview
+  counts (never a mixed-unit total), search/filter, manual add/remove through
+  the existing `/api/confirm` path, private per-visitor products (SQLite
+  overlay on the immutable seed catalogue), one new AI intent `restock`
+  (code computes "minimum to clear the low alert"), unit-mismatch guard,
+  minute-vs-day rate-limit messages. Cut: AI product prefill, daily report,
+  CSV, charts, product edit/delete, valuation, forecasting. Hamza Mart is
+  labelled fictional; the post must not imply the friend approved it.
+  Work split: Codex workers on ledger, questions, frontend in parallel;
+  Claude on main.py, API.md, models.py and API tests.

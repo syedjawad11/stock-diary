@@ -1,7 +1,7 @@
 # Status: HF26 Stock Diary (workspace memory)
 
 Read this first when resuming. Update it at every milestone or break.
-Last updated: Sun 4 Oct 2026, ~15:05 Malta. Jawad is on a 10–15 min break.
+Last updated: Sun 4 Oct 2026, ~15:40 Malta. Hamza Mart upgrade in progress (see PLAN.md decisions log, 15:15).
 
 ## Deadline
 - Submission closes Mon 5 Oct 06:59 UTC (08:59 Malta).
@@ -26,6 +26,12 @@ Last updated: Sun 4 Oct 2026, ~15:05 Malta. Jawad is on a 10–15 min break.
 - [x] Cloudflare thinking-budget bug fixed (12/12 spike)
 - [x] Deployed to Render, live URL tested end to end (parse, stock guard, 3 question types)
 - [x] Doubled-bracket fix in low-stock answers + README "Try it live" (Codex, verified)
+
+## In progress: Hamza Mart upgrade (started 15:30)
+- Contract: API.md "Hamza Mart upgrade" section; models.py `NewProduct`, `UNITS`, `Intent.RESTOCK`.
+- Codex workers (task files in .agent/tasks/): ledger-products, questions-restock, frontend-hamza.
+- Claude: main.py wired (catalogue_for, /api/products, unit_mismatch, rate-limit scope) + tests/test_api.py.
+- Then: full pytest, local click-through EN/UR phone+desktop, Sol diff review, commit, push, live check.
 
 ## Next (in order)
 1. Urdu/RTL visual check of the live page (screenshot, phone width).

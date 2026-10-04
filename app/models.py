@@ -20,6 +20,18 @@ class Product(BaseModel):
     opening_qty: int = Field(ge=0)  # demo seed stock
 
 
+UNITS = ["carton", "bag", "tin", "packet", "box", "piece"]
+
+
+class NewProduct(BaseModel):
+    """A product a visitor adds to their own sandbox. Server assigns the id; stock starts at 0."""
+    name_en: str = Field(min_length=2, max_length=60)
+    name_ur: str = Field("", max_length=60)  # optional; falls back to name_en
+    aliases: List[str] = Field(default_factory=list, max_length=8)  # each <= 40 chars
+    unit: str  # one of UNITS
+    low_threshold: int = Field(ge=0, le=100000)
+
+
 # --- What the model returns (validated before anything touches the ledger) ---
 
 class ParsedLine(BaseModel):
@@ -38,6 +50,7 @@ class Intent(str, Enum):
     LOW_STOCK = "low_stock"
     BALANCE = "balance"
     TODAY = "today"
+    RESTOCK = "restock"
     UNKNOWN = "unknown"
 
 

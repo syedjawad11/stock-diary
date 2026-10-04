@@ -1,11 +1,16 @@
 """SQLite stock ledger. Balances are derived from immutable movement rows."""
 
+import json
+import re
 import sqlite3
 import threading
 from datetime import date, datetime, timedelta, timezone
 from typing import Callable, Dict, List, Optional, Tuple
 
-from app.models import Direction, Movement, PostLine, Product, StockRow
+from app.models import Direction, Movement, NewProduct, PostLine, Product, StockRow, UNITS
+
+
+MAX_CUSTOM_PRODUCTS = 30
 
 
 def utcnow() -> datetime:
@@ -18,6 +23,14 @@ class LedgerError(Exception):
 
 class UnknownProduct(LedgerError):
     code = "unknown_product"
+
+
+class DuplicateProduct(LedgerError):
+    code = "duplicate_product"
+
+
+class TooManyProducts(LedgerError):
+    code = "too_many_products"
 
 
 class InsufficientStock(LedgerError):
@@ -61,6 +74,19 @@ class Ledger:
             CREATE TABLE IF NOT EXISTS visitors (
                 id TEXT PRIMARY KEY,
                 last_seen TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS visitor_products (
+                visitor_id TEXT NOT NULL REFERENCES visitors(id) ON DELETE CASCADE,
+                id TEXT NOT NULL,
+                name_en TEXT NOT NULL,
+                name_ur TEXT NOT NULL,
+                aliases TEXT NOT NULL,
+                unit TEXT NOT NULL,
+                low_threshold INTEGER NOT NULL,
+                created_key TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                PRIMARY KEY(visitor_id, id),
+                UNIQUE(visitor_id, created_key)
             );
             CREATE TABLE IF NOT EXISTS posts (
                 id INTEGER PRIMARY KEY,
@@ -146,6 +172,7 @@ class Ledger:
                 )
                 self._db.execute("DELETE FROM movements WHERE visitor_id = ?", (visitor_id,))
                 self._db.execute("DELETE FROM posts WHERE visitor_id = ?", (visitor_id,))
+                self._db.execute("DELETE FROM visitor_products WHERE visitor_id = ?", (visitor_id,))
                 self._db.execute(
                     "UPDATE visitors SET last_seen = ? WHERE id = ?", (timestamp, visitor_id)
                 )
@@ -155,8 +182,110 @@ class Ledger:
                 self._db.rollback()
                 raise
 
-    def _check_product(self, product_id: str) -> None:
-        if product_id not in self._products:
+    @staticmethod
+    def _custom_product(row: sqlite3.Row) -> Product:
+        return Product(
+            id=row["id"],
+            name_en=row["name_en"],
+            name_ur=row["name_ur"],
+            aliases=json.loads(row["aliases"]),
+            unit=row["unit"],
+            low_threshold=row["low_threshold"],
+            opening_qty=0,
+        )
+
+    def _catalogue_locked(self, visitor_id: str) -> List[Product]:
+        rows = self._db.execute(
+            "SELECT * FROM visitor_products WHERE visitor_id = ? ORDER BY created_at, rowid",
+            (visitor_id,),
+        ).fetchall()
+        return list(self.catalogue) + [self._custom_product(row) for row in rows]
+
+    def catalogue_for(self, visitor_id: str) -> List[Product]:
+        with self._lock:
+            return self._catalogue_locked(visitor_id)
+
+    def add_product(self, visitor_id: str, new: NewProduct, key: str) -> Product:
+        with self._lock:
+            self._begin()
+            try:
+                timestamp = self._timestamp()
+                self._ensure_locked(visitor_id, timestamp)
+                prior = self._db.execute(
+                    "SELECT * FROM visitor_products WHERE visitor_id = ? AND created_key = ?",
+                    (visitor_id, key),
+                ).fetchone()
+                if prior is not None:
+                    self._db.commit()
+                    return self._custom_product(prior)
+
+                name_en = " ".join(new.name_en.split())
+                if not name_en:
+                    raise ValueError("name_en must not be empty")
+                name_ur = new.name_ur.strip() or name_en
+                if new.unit not in UNITS:
+                    raise ValueError("invalid product unit")
+                aliases = []
+                for value in new.aliases:
+                    alias = " ".join(value.lower().split())
+                    if alias and len(alias) <= 40 and alias not in aliases:
+                        aliases.append(alias)
+                name_aliases = [name_en.lower()]
+                if name_ur.casefold() != name_en.casefold():
+                    name_aliases.append(name_ur)
+                for alias in name_aliases:
+                    if alias and alias not in aliases:
+                        aliases.append(alias)
+
+                custom_names = self._db.execute(
+                    "SELECT name_en FROM visitor_products WHERE visitor_id = ?", (visitor_id,)
+                ).fetchall()
+                if any(product.name_en.casefold() == name_en.casefold()
+                       for product in self.catalogue) or any(
+                    row["name_en"].casefold() == name_en.casefold() for row in custom_names
+                ):
+                    raise DuplicateProduct(name_en)
+                count = self._db.execute(
+                    "SELECT COUNT(*) FROM visitor_products WHERE visitor_id = ?", (visitor_id,)
+                ).fetchone()[0]
+                if count >= MAX_CUSTOM_PRODUCTS:
+                    raise TooManyProducts(visitor_id)
+
+                slug = "-".join(re.findall(r"[a-z0-9]+", name_en.lower()))[:30].rstrip("-") or "item"
+                base_id = "custom-" + slug
+                product_id = base_id
+                suffix = 2
+                while product_id in self._products or self._db.execute(
+                    "SELECT 1 FROM visitor_products WHERE visitor_id = ? AND id = ?",
+                    (visitor_id, product_id),
+                ).fetchone() is not None:
+                    product_id = "{}-{}".format(base_id, suffix)
+                    suffix += 1
+                self._db.execute(
+                    """INSERT INTO visitor_products
+                       (visitor_id, id, name_en, name_ur, aliases, unit,
+                        low_threshold, created_key, created_at)
+                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                    (visitor_id, product_id, name_en, name_ur, json.dumps(aliases),
+                     new.unit, new.low_threshold, key, timestamp),
+                )
+                self._db.commit()
+                return Product(
+                    id=product_id, name_en=name_en, name_ur=name_ur,
+                    aliases=aliases, unit=new.unit,
+                    low_threshold=new.low_threshold, opening_qty=0,
+                )
+            except Exception:
+                self._db.rollback()
+                raise
+
+    def _check_product(self, visitor_id: str, product_id: str) -> None:
+        if product_id in self._products:
+            return
+        if self._db.execute(
+            "SELECT 1 FROM visitor_products WHERE visitor_id = ? AND id = ?",
+            (visitor_id, product_id),
+        ).fetchone() is None:
             raise UnknownProduct(product_id)
 
     def _balance(self, visitor_id: str, product_id: str) -> int:
@@ -168,32 +297,33 @@ class Ledger:
         return int(row[0])
 
     def balance(self, visitor_id: str, product_id: str) -> int:
-        self._check_product(product_id)
         with self._lock:
+            self._check_product(visitor_id, product_id)
             return self._balance(visitor_id, product_id)
 
     def stock(self, visitor_id: str) -> List[StockRow]:
         with self._lock:
+            catalogue = self._catalogue_locked(visitor_id)
             rows = self._db.execute(
                 """SELECT product_id,
                           SUM(CASE direction WHEN 'in' THEN qty ELSE -qty END) AS qty
                    FROM movements WHERE visitor_id = ? GROUP BY product_id""",
                 (visitor_id,),
             ).fetchall()
-        quantities = {row["product_id"]: int(row["qty"]) for row in rows}
-        return [
-            StockRow(
-                product=product,
-                qty=quantities.get(product.id, 0),
-                is_low=quantities.get(product.id, 0) <= product.low_threshold,
-            )
-            for product in self.catalogue
-        ]
+            quantities = {row["product_id"]: int(row["qty"]) for row in rows}
+            return [
+                StockRow(
+                    product=product,
+                    qty=quantities.get(product.id, 0),
+                    is_low=quantities.get(product.id, 0) <= product.low_threshold,
+                )
+                for product in catalogue
+            ]
 
     def preview(self, visitor_id: str, lines: List[PostLine]) -> List[Tuple[int, int]]:
-        for line in lines:
-            self._check_product(line.product_id)
         with self._lock:
+            for line in lines:
+                self._check_product(visitor_id, line.product_id)
             running: Dict[str, int] = {}
             result = []
             for line in lines:
@@ -240,7 +370,7 @@ class Ledger:
                     self._db.commit()
                     return [self._movement(row) for row in rows]
                 for line in lines:
-                    self._check_product(line.product_id)
+                    self._check_product(visitor_id, line.product_id)
                 timestamp = self._timestamp()
                 self._ensure_locked(visitor_id, timestamp)
                 post_id = self._db.execute(

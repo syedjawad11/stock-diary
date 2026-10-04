@@ -4,12 +4,14 @@ import pytest
 
 from app.ledger import (
     AlreadyReversed,
+    DuplicateProduct,
     InsufficientStock,
     Ledger,
     NotFound,
+    TooManyProducts,
     UnknownProduct,
 )
-from app.models import Direction, PostLine, Product
+from app.models import Direction, NewProduct, PostLine, Product
 
 
 @pytest.fixture
@@ -202,3 +204,104 @@ def test_memory_database_keeps_one_connection(catalogue):
     assert ledger.ensure_visitor("a") is True
     assert ledger.balance("a", "rice") == 5
     assert ledger.ensure_visitor("a") is False
+
+
+def new_product(name, **kwargs):
+    return NewProduct(name_en=name, unit="box", low_threshold=2, **kwargs)
+
+
+def test_add_product_normalises_fields_and_starts_at_zero(ledger, catalogue):
+    created = ledger.add_product(
+        "a", new_product("  Green   Tea  ", name_ur="  سبز چائے  ",
+                         aliases=[" GREEN   TEA ", "green tea", " ", "X" * 41]), "create-1"
+    )
+    assert created.id.startswith("custom-")
+    assert created.name_en == "Green Tea"
+    assert created.name_ur == "سبز چائے"
+    assert created.unit == "box"
+    assert created.opening_qty == 0
+    assert created.aliases == ["green tea", "سبز چائے"]
+    assert [p.id for p in ledger.catalogue_for("a")] == [p.id for p in catalogue] + [created.id]
+    assert [p.id for p in ledger.catalogue] == [p.id for p in catalogue]
+    assert (ledger.stock("a")[-1].product.id, ledger.stock("a")[-1].qty) == (created.id, 0)
+
+
+def test_add_product_same_key_is_idempotent(ledger):
+    first = ledger.add_product("a", new_product("Tea"), "same")
+    again = ledger.add_product("a", new_product("Different"), "same")
+    assert again == first
+    assert [p.id for p in ledger.catalogue_for("a") if p.id.startswith("custom-")] == [first.id]
+
+
+def test_duplicate_product_name_vs_custom_and_seed(ledger):
+    ledger.add_product("a", new_product("Tea"), "one")
+    with pytest.raises(DuplicateProduct):
+        ledger.add_product("a", new_product("tEa"), "two")
+    with pytest.raises(DuplicateProduct):
+        ledger.add_product("a", new_product("RICE"), "three")
+    assert len(ledger.catalogue_for("a")) == 4
+    assert ledger.add_product("b", new_product("Tea"), "one").name_en == "Tea"
+
+
+def test_custom_product_cap(ledger):
+    for index in range(30):
+        ledger.add_product("a", new_product("Item {}".format(index)), str(index))
+    assert len(ledger.catalogue_for("a")) == 33
+    with pytest.raises(TooManyProducts):
+        ledger.add_product("a", new_product("Extra"), "extra")
+    assert ledger.add_product("a", new_product("Changed"), "0").name_en == "Item 0"
+
+
+def test_custom_product_isolation(ledger):
+    created = ledger.add_product("a", new_product("Tea"), "one")
+    assert created.id not in [p.id for p in ledger.catalogue_for("b")]
+    assert created.id not in [row.product.id for row in ledger.stock("b")]
+    with pytest.raises(UnknownProduct):
+        ledger.balance("b", created.id)
+    with pytest.raises(UnknownProduct):
+        ledger.preview("b", [line(created.id, 1, Direction.IN)])
+    with pytest.raises(UnknownProduct):
+        ledger.post("b", [line(created.id, 1, Direction.IN)], "wrong visitor", "one")
+
+
+def test_custom_product_post_undo_and_insufficient_stock(ledger):
+    created = ledger.add_product("a", new_product("Tea"), "create")
+    assert ledger.preview("a", [line(created.id, 10, Direction.IN)]) == [(0, 10)]
+    ledger.post("a", [line(created.id, 10, Direction.IN)], "received", "in")
+    outgoing = ledger.post("a", [line(created.id, 3, Direction.OUT)], "sold", "out")[0]
+    assert ledger.balance("a", created.id) == 7
+    ledger.undo("a", outgoing.id)
+    assert ledger.balance("a", created.id) == 10
+    with pytest.raises(InsufficientStock):
+        ledger.post("a", [line(created.id, 99, Direction.OUT)], "too much", "bad")
+    assert ledger.balance("a", created.id) == 10
+
+
+def test_reset_and_purge_remove_custom_products(ledger, clock):
+    first = ledger.add_product("a", new_product("Tea"), "one")
+    ledger.reset("a")
+    assert first.id not in [p.id for p in ledger.catalogue_for("a")]
+    with pytest.raises(UnknownProduct):
+        ledger.balance("a", first.id)
+
+    second = ledger.add_product("old", new_product("Coffee"), "two")
+    clock.value += timedelta(hours=25)
+    ledger.ensure_visitor("fresh")
+    assert ledger.purge_inactive(now=clock.value) == 2
+    assert ledger._db.execute(
+        "SELECT COUNT(*) FROM visitor_products WHERE visitor_id = ?", ("old",)
+    ).fetchone()[0] == 0
+    assert second.id not in [p.id for p in ledger.catalogue_for("old")]
+    with pytest.raises(UnknownProduct):
+        ledger.balance("old", second.id)
+    # Reusing the key after cascade deletion must create a new row.
+    assert ledger.add_product("old", new_product("Coffee"), "two").id == second.id
+
+
+def test_invalid_unit_and_slug_collisions(ledger):
+    with pytest.raises(ValueError):
+        ledger.add_product("a", NewProduct(name_en="Tea", unit="crate", low_threshold=0), "bad")
+    first = ledger.add_product("a", new_product("Green Tea"), "one")
+    second = ledger.add_product("a", new_product("Green-Tea"), "two")
+    assert first.id == "custom-green-tea"
+    assert second.id == "custom-green-tea-2"

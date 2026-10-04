@@ -9,15 +9,16 @@ SYSTEM = """Classify a stock question from a food wholesaler (English, Roman Urd
 Return JSON {"intent": ..., "product_id": ...}.
 intent is one of:
 - low_stock: what is running low / kya kam hai / کیا کم ہے
+- restock: what to order / reorder / buy next / kal kya mangwana hai / kya mangwana hai / order list / کیا منگوانا ہے
 - balance: how much of ONE product is left (set product_id from the catalogue)
 - today: what came in or went out today / aaj kya aaya, kya gaya
 - unknown: anything else
-product_id is null unless intent is balance.
+product_id is null unless intent is balance, including for restock.
 
 Catalogue (id | names):
 {catalogue}"""
 
-UNIT_UR = {"carton": "کارٹن", "bag": "بوری", "tin": "ٹین", "packet": "پیکٹ", "box": "ڈبہ"}
+UNIT_UR = {"carton": "کارٹن", "bag": "بوری", "tin": "ٹین", "packet": "پیکٹ", "box": "ڈبہ", "piece": "عدد"}
 
 
 def classify(text: str, catalogue: List[Product]) -> Question:
@@ -36,7 +37,7 @@ def _qty_ur(qty: int, unit: str) -> str:
     return f"{qty} {UNIT_UR.get(unit, unit)}"
 
 
-def answer(q: Question, stock: List[StockRow], today_moves: List[Movement]) -> Dict[str, str]:
+def answer(q: Question, stock: List[StockRow], today_moves: List[Movement]) -> Dict[str, object]:
     by_id = {row.product.id: row for row in stock}
     if q.intent == Intent.LOW_STOCK:
         low = [row for row in stock if row.is_low]
@@ -45,6 +46,22 @@ def answer(q: Question, stock: List[StockRow], today_moves: List[Movement]) -> D
         en = "; ".join(f"{r.product.name_en}: {_qty_en(r.qty, r.product.unit)}" for r in low)
         ur = "؛ ".join(f"{r.product.name_ur}: {_qty_ur(r.qty, r.product.unit)}" for r in low)
         return {"answer_en": f"Running low: {en}.", "answer_ur": f"کم سٹاک: {ur}۔"}
+    if q.intent == Intent.RESTOCK:
+        low = [row for row in stock if row.is_low]
+        if not low:
+            return {"answer_en": "Nothing needs reordering right now.",
+                    "answer_ur": "ابھی کچھ منگوانے کی ضرورت نہیں۔"}
+        items = []
+        en_parts, ur_parts = [], []
+        for r in low:
+            need = max(1, r.product.low_threshold + 1 - r.qty)
+            en_parts.append(f"{r.product.name_en}: order at least {_qty_en(need, r.product.unit)} (have {r.qty})")
+            ur_parts.append(f"{r.product.name_ur}: کم از کم {_qty_ur(need, r.product.unit)} (موجود {r.qty})")
+            items.append({"product_id": r.product.id, "qty": r.qty,
+                          "low_threshold": r.product.low_threshold, "min_order": need})
+        return {"answer_en": "Restock list (minimum to clear the low alert): " + "; ".join(en_parts) + ".",
+                "answer_ur": "منگوانے کی فہرست (کم از کم): " + "؛ ".join(ur_parts) + "۔",
+                "items": items}
     if q.intent == Intent.BALANCE and q.product_id in by_id:
         r = by_id[q.product_id]
         return {"answer_en": f"{r.product.name_en}: {_qty_en(r.qty, r.product.unit)} in stock.",
@@ -63,5 +80,5 @@ def answer(q: Question, stock: List[StockRow], today_moves: List[Movement]) -> D
             ur_parts.append(f"{p.name_ur} {_qty_ur(qty, p.unit)} {'آئے' if direction == 'in' else 'نکلے'}")
         return {"answer_en": f"Today ({date.today():%d %b}): " + "; ".join(en_parts) + ".",
                 "answer_ur": "آج: " + "، ".join(ur_parts) + "۔"}
-    return {"answer_en": "I can answer: what is low, how much of one product is left, or what moved today.",
-            "answer_ur": "میں یہ بتا سکتا ہوں: کیا کم ہے، کسی چیز کا کتنا سٹاک ہے، یا آج کیا آیا گیا۔"}
+    return {"answer_en": "I can answer: what is low, what to reorder, how much of one product is left, or what moved today.",
+            "answer_ur": "میں یہ بتا سکتا ہوں: کیا کم ہے، کیا منگوانا ہے، کسی چیز کا کتنا سٹاک ہے، یا آج کیا آیا گیا۔"}

@@ -11,11 +11,26 @@ plain Python keeps the ledger, running balances, and low-stock flags. Ask
 "kis cheez ka stock kam hai?" and get a plain-language answer, filled in from
 the real numbers — Gemma only picks the question's intent, never the figures.
 
+The demo is dressed as the warehouse stock account of **Hamza Mart**, a
+fictional shop. All products and quantities are synthetic.
+
+What you can do:
+
+- **AI entry**: type a sentence; Gemma proposes movements; you check and confirm.
+  Unit words are checked too ("5 bori laal mirch" when mirch is counted in packets
+  is blocked until you confirm the unit).
+- **Add / remove stock by hand**: pick a product, quantity, reason. No AI involved.
+- **New product**: add your own product (private to your sandbox); Gemma can then
+  recognise it in typed entries.
+- **Ask**: what is low, what to reorder ("kal kya mangwana hai?"), one product's
+  balance, or today's movements. Gemma only picks the question type; Python fills
+  in every number. The reorder list is "minimum to clear the low-stock alert",
+  not a forecast.
+- Inventory with search, Low / Out of stock filters, and overview counts.
+
 Built for the DEV Hacktoberfest Weekend Challenge: Build for a Friend (Oct
 2026), for a friend of Jawad's who runs a small import/export and wholesale
 business in Pakistan (rice, spices, packaged food, cartons).
-
-**Live demo:** (link pending)
 
 ## Local setup
 

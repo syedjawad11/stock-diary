@@ -1,94 +1,306 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Stock Diary</title>
-<meta name="description" content="A bilingual stock book for a small wholesaler." />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/style.css" />
-</head>
-<body>
-<div class="page">
-
-  <header class="app-header">
-    <div class="header-row">
-      <h1 data-i18n="appTitle">Stock Diary</h1>
-      <div class="lang-toggle" role="group" aria-label="Language">
-        <button id="lang-en" type="button" class="lang-btn" aria-pressed="true">English</button>
-        <button id="lang-ur" type="button" class="lang-btn" aria-pressed="false">اردو</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Hamza Mart · Stock Diary</title>
+    <meta
+      name="description"
+      content="A bilingual warehouse stock account for a fictional demo shop."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="app-header">
+        <div class="brand">
+          <span class="monogram" aria-hidden="true">HM</span>
+          <div>
+            <h1 data-i18n="appTitle">Hamza Mart</h1>
+            <p data-i18n="subtitle">Warehouse stock account</p>
+          </div>
+        </div>
+        <div class="header-tools">
+          <span class="demo-pill" data-i18n="demoPill">Fictional demo shop · synthetic data</span>
+          <div class="lang-toggle" role="group" aria-label="Language">
+            <button id="lang-en" type="button" class="lang-btn" aria-pressed="true">English</button
+            ><button id="lang-ur" type="button" class="lang-btn" aria-pressed="false">اردو</button>
+          </div>
+          <button id="reset-btn" type="button" class="btn btn-ghost" data-i18n="reset">
+            Reset
+          </button>
+        </div>
+        <p class="powered" data-i18n="powered">Stock Diary · powered by Gemma (open model)</p>
+      </header>
+      <main>
+        <section class="overview" aria-label="Overview">
+          <button type="button" class="overview-card" data-filter="all">
+            <span data-i18n="products">Products</span
+            ><strong id="count-products"><bdi>0</bdi></strong></button
+          ><button type="button" class="overview-card" data-filter="low">
+            <span data-i18n="lowStock">Low stock</span
+            ><strong id="count-low"><bdi>0</bdi></strong></button
+          ><button type="button" class="overview-card" data-filter="out">
+            <span data-i18n="outOfStock">Out of stock</span
+            ><strong id="count-out"><bdi>0</bdi></strong>
+          </button>
+        </section>
+        <div class="workspace">
+          <div class="action-column">
+            <section class="card action-panel">
+              <div class="tabs" role="tablist" aria-label="Stock actions">
+                <button
+                  id="tab-ai"
+                  type="button"
+                  role="tab"
+                  aria-controls="panel-ai"
+                  aria-selected="true"
+                  data-i18n="tabAi"
+                >
+                  AI entry</button
+                ><button
+                  id="tab-manual"
+                  type="button"
+                  role="tab"
+                  aria-controls="panel-manual"
+                  aria-selected="false"
+                  data-i18n="tabManual"
+                >
+                  Add / remove stock</button
+                ><button
+                  id="tab-product"
+                  type="button"
+                  role="tab"
+                  aria-controls="panel-product"
+                  aria-selected="false"
+                  data-i18n="tabProduct"
+                >
+                  New product</button
+                ><button
+                  id="tab-ask"
+                  type="button"
+                  role="tab"
+                  aria-controls="panel-ask"
+                  aria-selected="false"
+                  data-i18n="tabAsk"
+                >
+                  Ask
+                </button>
+              </div>
+              <div id="panel-ai" role="tabpanel" aria-labelledby="tab-ai">
+                <h2 data-i18n="entryHeading">What came in or went out?</h2>
+                <textarea
+                  id="entry-text"
+                  maxlength="300"
+                  dir="auto"
+                  rows="3"
+                  data-i18n-placeholder="entryPlaceholder"
+                ></textarea>
+                <div class="row entry-actions">
+                  <button
+                    id="example-btn"
+                    type="button"
+                    class="btn btn-secondary"
+                    data-i18n="tryExample"
+                  >
+                    Try an example</button
+                  ><button
+                    id="check-btn"
+                    type="button"
+                    class="btn btn-primary"
+                    data-i18n="checkEntry"
+                  >
+                    Check entry
+                  </button>
+                </div>
+                <p class="quota-text" id="quota-text"></p>
+                <p class="quota-hint" data-i18n="quotaHint">Manual changes do not use AI checks.</p>
+                <div id="parse-status" class="status-area" aria-live="polite"></div>
+                <section id="proposals-section" hidden aria-labelledby="proposals-heading">
+                  <h2 id="proposals-heading" data-i18n="proposalsHeading">Check before saving</h2>
+                  <div id="proposals-list"></div>
+                  <p id="confirm-hint" class="hint" hidden data-i18n="confirmDisabledHint">
+                    Fix the marked items before saving.
+                  </p>
+                  <div id="confirm-error" class="error-text" hidden></div>
+                  <div class="row proposals-actions">
+                    <button id="cancel-btn" type="button" class="btn btn-ghost" data-i18n="cancel">
+                      Cancel</button
+                    ><button
+                      id="confirm-btn"
+                      type="button"
+                      class="btn btn-primary"
+                      data-i18n="confirmSave"
+                    >
+                      Confirm &amp; save
+                    </button>
+                  </div>
+                </section>
+              </div>
+              <div id="panel-manual" role="tabpanel" aria-labelledby="tab-manual" hidden>
+                <h2 data-i18n="tabManual">Add / remove stock</h2>
+                <form id="manual-form" novalidate>
+                  <label for="manual-product" data-i18n="product">Product</label
+                  ><select id="manual-product"></select
+                  ><span class="field-label" data-i18n="direction">Direction</span>
+                  <div class="segmented" role="group" aria-label="Direction">
+                    <button
+                      id="manual-in"
+                      type="button"
+                      class="active"
+                      aria-pressed="true"
+                      data-i18n="add"
+                    >
+                      Add</button
+                    ><button id="manual-out" type="button" aria-pressed="false" data-i18n="remove">
+                      Remove
+                    </button>
+                  </div>
+                  <label for="manual-qty" data-i18n="quantity">Quantity</label
+                  ><input
+                    id="manual-qty"
+                    type="number"
+                    min="1"
+                    step="1"
+                    inputmode="numeric"
+                  /><label for="manual-reason" data-i18n="reason">Reason (optional)</label
+                  ><input id="manual-reason" type="text" maxlength="120" />
+                  <p id="manual-preview" class="preview" aria-live="polite"></p>
+                  <p id="manual-error" class="error-text" hidden></p>
+                  <button id="manual-save" type="submit" class="btn btn-primary" data-i18n="save">
+                    Save
+                  </button>
+                </form>
+              </div>
+              <div id="panel-product" role="tabpanel" aria-labelledby="tab-product" hidden>
+                <h2 data-i18n="tabProduct">New product</h2>
+                <form id="product-form" novalidate>
+                  <label for="product-name-en" data-i18n="englishName">English name</label
+                  ><input
+                    id="product-name-en"
+                    type="text"
+                    minlength="2"
+                    maxlength="60"
+                    required
+                  /><label for="product-name-ur" data-i18n="urduName">Urdu name (optional)</label
+                  ><input id="product-name-ur" type="text" maxlength="60" dir="auto" /><label
+                    for="product-aliases"
+                    data-i18n="aliases"
+                    >Other names (comma separated, up to 8)</label
+                  ><input id="product-aliases" type="text" /><label
+                    for="product-unit"
+                    data-i18n="unit"
+                    >Unit</label
+                  ><select id="product-unit"></select
+                  ><label for="product-low" data-i18n="lowAt">Low-stock alert at</label
+                  ><input
+                    id="product-low"
+                    type="number"
+                    min="0"
+                    max="100000"
+                    step="1"
+                    inputmode="numeric"
+                    value="0"
+                  />
+                  <p id="product-error" class="error-text" hidden></p>
+                  <button
+                    id="product-save"
+                    type="submit"
+                    class="btn btn-primary"
+                    data-i18n="createProduct"
+                  >
+                    Create product
+                  </button>
+                </form>
+              </div>
+              <div id="panel-ask" role="tabpanel" aria-labelledby="tab-ask" hidden>
+                <h2 data-i18n="askHeading">Ask about your stock</h2>
+                <input
+                  id="ask-text"
+                  type="text"
+                  maxlength="200"
+                  dir="auto"
+                  data-i18n-placeholder="askPlaceholder"
+                />
+                <div class="row chips-row">
+                  <button id="chip-low" type="button" class="chip" data-i18n="chipLowStock">
+                    Low stock</button
+                  ><button id="chip-today" type="button" class="chip" data-i18n="chipToday">
+                    Today</button
+                  ><button id="chip-reorder" type="button" class="chip" data-i18n="chipReorder">
+                    Reorder list</button
+                  ><button id="ask-btn" type="button" class="btn btn-primary" data-i18n="askButton">
+                    Ask
+                  </button>
+                </div>
+                <div id="ask-status" class="status-area" aria-live="polite"></div>
+                <div id="answer-card" class="answer-card" hidden></div>
+              </div>
+            </section>
+          </div>
+          <div class="inventory-column">
+            <section class="card stock-section" aria-labelledby="stock-heading">
+              <div class="section-heading">
+                <h2 id="stock-heading" data-i18n="stockHeading">Current stock</h2>
+              </div>
+              <input
+                id="stock-search"
+                type="text"
+                data-i18n-placeholder="searchProducts"
+                aria-label="Search products"
+              />
+              <div class="segmented filter-bar" role="group" aria-label="Stock filter">
+                <button
+                  id="filter-all"
+                  type="button"
+                  data-filter="all"
+                  class="active"
+                  aria-pressed="true"
+                  data-i18n="all"
+                >
+                  All</button
+                ><button
+                  id="filter-low"
+                  type="button"
+                  data-filter="low"
+                  aria-pressed="false"
+                  data-i18n="lowStock"
+                >
+                  Low stock</button
+                ><button
+                  id="filter-out"
+                  type="button"
+                  data-filter="out"
+                  aria-pressed="false"
+                  data-i18n="outOfStock"
+                >
+                  Out of stock
+                </button>
+              </div>
+              <div id="stock-list"></div>
+            </section>
+            <details class="card recent-section" id="recent-section">
+              <summary data-i18n="recentHeading">Recent entries</summary>
+              <div id="recent-list"></div>
+            </details>
+          </div>
+        </div>
+      </main>
+      <div id="toast" class="toast" hidden role="status">
+        <span id="toast-msg"></span
+        ><button id="toast-undo" type="button" class="btn btn-link" data-i18n="undo">Undo</button>
       </div>
+      <footer class="app-footer">
+        <p data-i18n="footer">Runs on Gemma, an open-weight model. Demo data is made up.</p>
+      </footer>
     </div>
-    <div class="header-row sub-row">
-      <p class="subtitle" data-i18n="subtitle">Your private demo</p>
-      <button id="reset-btn" type="button" class="btn btn-ghost" data-i18n="reset">Reset</button>
-    </div>
-  </header>
-
-  <main>
-
-    <section class="card entry-section" aria-labelledby="entry-heading">
-      <h2 id="entry-heading" data-i18n="entryHeading">What came in or went out?</h2>
-      <textarea id="entry-text" maxlength="300" dir="auto" rows="3"
-        data-i18n-placeholder="entryPlaceholder"></textarea>
-      <div class="row entry-actions">
-        <button id="example-btn" type="button" class="btn btn-secondary" data-i18n="tryExample">Try an example</button>
-        <button id="check-btn" type="button" class="btn btn-primary" data-i18n="checkEntry">Check entry</button>
-      </div>
-      <p class="quota-text" id="quota-text"></p>
-      <div id="parse-status" class="status-area" aria-live="polite"></div>
-    </section>
-
-    <section class="card proposals-section" id="proposals-section" hidden aria-labelledby="proposals-heading">
-      <h2 id="proposals-heading" data-i18n="proposalsHeading">Check before saving</h2>
-      <div id="proposals-list"></div>
-      <p id="confirm-hint" class="hint" hidden data-i18n="confirmDisabledHint">Fix the marked items before saving.</p>
-      <div id="confirm-error" class="error-text" hidden></div>
-      <div class="row proposals-actions">
-        <button id="cancel-btn" type="button" class="btn btn-ghost" data-i18n="cancel">Cancel</button>
-        <button id="confirm-btn" type="button" class="btn btn-primary" data-i18n="confirmSave">Confirm &amp; save</button>
-      </div>
-    </section>
-
-    <div id="toast" class="toast" hidden role="status">
-      <span id="toast-msg"></span>
-      <button id="toast-undo" type="button" class="btn btn-link" data-i18n="undo">Undo</button>
-    </div>
-
-    <section class="card stock-section" aria-labelledby="stock-heading">
-      <h2 id="stock-heading" data-i18n="stockHeading">Current stock</h2>
-      <div id="stock-list"></div>
-    </section>
-
-    <section class="card ask-section" aria-labelledby="ask-heading">
-      <h2 id="ask-heading" data-i18n="askHeading">Ask about your stock</h2>
-      <input id="ask-text" type="text" maxlength="200" dir="auto"
-        data-i18n-placeholder="askPlaceholder" />
-      <div class="row chips-row">
-        <button id="chip-low" type="button" class="chip" data-i18n="chipLowStock">Low stock</button>
-        <button id="chip-today" type="button" class="chip" data-i18n="chipToday">Today</button>
-        <button id="ask-btn" type="button" class="btn btn-primary" data-i18n="askButton">Ask</button>
-      </div>
-      <div id="ask-status" class="status-area" aria-live="polite"></div>
-      <div id="answer-card" class="answer-card" hidden></div>
-    </section>
-
-    <details class="card recent-section" id="recent-section">
-      <summary data-i18n="recentHeading">Recent entries</summary>
-      <div id="recent-list"></div>
-    </details>
-
-  </main>
-
-  <footer class="app-footer">
-    <p data-i18n="footer">Runs on Gemma, an open-weight model. Demo data is made up.</p>
-  </footer>
-
-</div>
-
-<script src="/static/i18n.js"></script>
-<script src="/static/app.js"></script>
-</body>
+    <script src="/static/i18n.js"></script>
+    <script src="/static/app.js"></script>
+  </body>
 </html>
