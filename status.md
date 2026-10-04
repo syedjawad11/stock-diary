@@ -37,7 +37,8 @@ Last updated: Sun 4 Oct 2026, ~16:00 Malta. Hamza Mart upgrade shipped and live.
       (script.json, record.js, tts.sh, assemble.py). Next: Jawad watches it, uploads to YouTube unlisted.
 - [x] 18:30 post.md drafted (GPT-6 Sol), edited by Claude, critiqued by Sol (.agent/reviews/20261004-182115.md), fixes applied.
       Cover at docs/cover.png (raw GitHub URL in front matter). README credits/limits + MIT LICENSE done.
-      Left: VIDEO_URL, one [JAWAD: ...] sentence, then paste into DEV and publish.
+      Video https://youtu.be/s6pBkxYO72M embedded; Hamza details added (childhood friend, paper register +
+      memory, showing him this week). Post complete: Jawad pastes into DEV, previews, publishes.
 - [x] Doubled-bracket fix in low-stock answers + README "Try it live" (Codex, verified)
 
 ## Next (in order)

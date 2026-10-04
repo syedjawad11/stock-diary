@@ -9,7 +9,7 @@ cover_image: https://raw.githubusercontent.com/syedjawad11/stock-diary/main/docs
 
 ## What I Built
 
-My friend Hamza runs Hamza Mart, a grocery store. His stock records live in his head and on paper, in Urdu, Roman Urdu, and English. I wanted to turn those same notes into balances he could check. [JAWAD: one sentence on how you know Hamza or a moment you saw him counting stock.]
+Hamza and I grew up together. Today he runs Hamza Mart, a grocery store, and his stock lives in a paper register and in his memory, written and thought in a mix of Urdu, Roman Urdu, and English. I wanted to turn those same notes into balances he could check.
 
 Stock Diary turns “20 carton basmati aaye, 5 packet haldi nikle” (“20 cartons of basmati came in, 5 packets of turmeric went out”) into two proposed stock movements. Each shows the product, quantity, unit, direction, and the balance before and after. He can correct the proposal before confirming it. Nothing is saved until he confirms.
 
@@ -17,13 +17,13 @@ That confirmation matters. A plausible sentence is not a reliable stock entry if
 
 He can also ask “kis cheez ka stock kam hai?” (“What is running low?”) or “kal kya mangwana hai?” (“What should I order tomorrow?”). Gemma only works out which question he is asking; Python answers from the ledger. The reorder list gives the minimum needed to clear each low-stock alert, not a forecast. Manual entries and new products cover the everyday work, with a full Urdu interface (right to left) and a layout that fits a phone.
 
-I built this from what I know of how Hamza works, not from a session with him. He has not used it yet, and the handover is pending. All stock figures in the public demo are sample data, not Hamza Mart's real stock.
+I built this from what I know of how Hamza works, not from a session with him. He has not used it yet; I'm showing it to him this week. All stock figures in the public demo are sample data, not Hamza Mart's real stock.
 
 ## Demo
 
 Try the [live Stock Diary demo](https://stock-diary-lscy.onrender.com): enter the sentence above, check the proposed balances, then confirm and look at the updated stock. Try “5 bori laal mirch aayi” to see the unit warning. Render's free plan can take about a minute to wake after inactivity. The video shows hosted and local Gemma running the same app code.
 
-{% embed VIDEO_URL %}
+{% embed https://youtu.be/s6pBkxYO72M %}
 
 Each browser gets a separate sandbox with a reset button. AI requests are limited to five per minute and 30 per day per visitor, with extra per-IP and global daily limits. These keep usage low; they don't guarantee the demo stays inside Cloudflare's free allowance.
 
@@ -90,4 +90,4 @@ I did not record a DevRelay session. The repository keeps the [task briefs and r
 - **Best Use of GitHub Copilot:** GitHub Actions runs all 42 tests on Python 3.9 and 3.12 on every push, so a ledger regression shows up on the commit that caused it.
 - **Best Use of ElevenLabs:** ElevenLabs generated the narration for the demo video.
 
-Next I want to hand Stock Diary to Hamza and see how it fits a real day at Hamza Mart. If he wants it, voice input in Urdu is the next feature I would try. If you have built a tool for a shopkeeper, how did you handle notes that switch between scripts and product names?
+This week I'm handing Stock Diary to Hamza to see how it fits a real day at Hamza Mart, and I'll add what he says to the comments. If he wants it, voice input in Urdu is the next feature I would try. If you have built a tool for a shopkeeper, how did you handle notes that switch between scripts and product names?
