@@ -29,6 +29,12 @@ Last updated: Sun 4 Oct 2026, ~16:00 Malta. Hamza Mart upgrade shipped and live.
 - [x] Deployed to Render, live URL tested end to end (parse, stock guard, 3 question types)
 - [x] Hamza Mart upgrade (16:05): private products, manual add/remove, restock intent, unit-mismatch guard,
       warehouse UI (desktop + phone, EN/UR). Sol reviewed; its 3 findings fixed. Live smoke passed on Cloudflare Gemma.
+- [x] 16:30 Correction: Hamza is real and THE friend (grocery store Hamza Mart). UI/README/prompts fixed,
+      parse spike 12/12 on both backends, deployed (58e08ec), live wording verified.
+- [x] Demo video pipeline (scratchpad/video: script.json, record.js, tts.sh, assemble.py). Silent captioned
+      preview at media/stock-diary-demo-silent-preview.mp4 (2:07, git-ignored). Waiting on ELEVENLABS_API_KEY
+      in .env + Jawad's OK on narration, then: ./tts.sh; node record.js; python3 assemble.py.
+      Local scene needs uvicorn on :8010 with MODEL_BACKEND=ollama and empty CF keys.
 - [x] Doubled-bracket fix in low-stock answers + README "Try it live" (Codex, verified)
 
 ## Next (in order)
