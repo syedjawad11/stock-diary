@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Stock Diary</title>
+<meta name="description" content="A bilingual stock book for a small wholesaler." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<div class="page">
+
+  <header class="app-header">
+    <div class="header-row">
+      <h1 data-i18n="appTitle">Stock Diary</h1>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button id="lang-en" type="button" class="lang-btn" aria-pressed="true">English</button>
+        <button id="lang-ur" type="button" class="lang-btn" aria-pressed="false">اردو</button>
+      </div>
+    </div>
+    <div class="header-row sub-row">
+      <p class="subtitle" data-i18n="subtitle">Your private demo</p>
+      <button id="reset-btn" type="button" class="btn btn-ghost" data-i18n="reset">Reset</button>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="card entry-section" aria-labelledby="entry-heading">
+      <h2 id="entry-heading" data-i18n="entryHeading">What came in or went out?</h2>
+      <textarea id="entry-text" maxlength="300" dir="auto" rows="3"
+        data-i18n-placeholder="entryPlaceholder"></textarea>
+      <div class="row entry-actions">
+        <button id="example-btn" type="button" class="btn btn-secondary" data-i18n="tryExample">Try an example</button>
+        <button id="check-btn" type="button" class="btn btn-primary" data-i18n="checkEntry">Check entry</button>
+      </div>
+      <p class="quota-text" id="quota-text"></p>
+      <div id="parse-status" class="status-area" aria-live="polite"></div>
+    </section>
+
+    <section class="card proposals-section" id="proposals-section" hidden aria-labelledby="proposals-heading">
+      <h2 id="proposals-heading" data-i18n="proposalsHeading">Check before saving</h2>
+      <div id="proposals-list"></div>
+      <p id="confirm-hint" class="hint" hidden data-i18n="confirmDisabledHint">Fix the marked items before saving.</p>
+      <div id="confirm-error" class="error-text" hidden></div>
+      <div class="row proposals-actions">
+        <button id="cancel-btn" type="button" class="btn btn-ghost" data-i18n="cancel">Cancel</button>
+        <button id="confirm-btn" type="button" class="btn btn-primary" data-i18n="confirmSave">Confirm &amp; save</button>
+      </div>
+    </section>
+
+    <div id="toast" class="toast" hidden role="status">
+      <span id="toast-msg"></span>
+      <button id="toast-undo" type="button" class="btn btn-link" data-i18n="undo">Undo</button>
+    </div>
+
+    <section class="card stock-section" aria-labelledby="stock-heading">
+      <h2 id="stock-heading" data-i18n="stockHeading">Current stock</h2>
+      <div id="stock-list"></div>
+    </section>
+
+    <section class="card ask-section" aria-labelledby="ask-heading">
+      <h2 id="ask-heading" data-i18n="askHeading">Ask about your stock</h2>
+      <input id="ask-text" type="text" maxlength="200" dir="auto"
+        data-i18n-placeholder="askPlaceholder" />
+      <div class="row chips-row">
+        <button id="chip-low" type="button" class="chip" data-i18n="chipLowStock">Low stock</button>
+        <button id="chip-today" type="button" class="chip" data-i18n="chipToday">Today</button>
+        <button id="ask-btn" type="button" class="btn btn-primary" data-i18n="askButton">Ask</button>
+      </div>
+      <div id="ask-status" class="status-area" aria-live="polite"></div>
+      <div id="answer-card" class="answer-card" hidden></div>
+    </section>
+
+    <details class="card recent-section" id="recent-section">
+      <summary data-i18n="recentHeading">Recent entries</summary>
+      <div id="recent-list"></div>
+    </details>
+
+  </main>
+
+  <footer class="app-footer">
+    <p data-i18n="footer">Runs on Gemma, an open-weight model. Demo data is made up.</p>
+  </footer>
+
+</div>
+
+<script src="/static/i18n.js"></script>
+<script src="/static/app.js"></script>
+</body>
+</html>

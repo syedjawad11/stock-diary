@@ -73,7 +73,9 @@
         "oil tin",
         "oil",
         "tel",
-        "ghee tel"
+        "ghee tel",
+        "cooking oil",
+        "oil tins"
       ],
       "unit": "tin",
       "low_threshold": 9,
