@@ -1,4 +1,4 @@
-# Invoice Match: instructions for Codex
+# Stock Diary: instructions for Codex
 
 Read `BRIEF.md` and `PLAN.md` first. The orchestrator (Claude Code) tells you
 whether you are a worker or a reviewer.
@@ -10,9 +10,14 @@ whether you are a worker or a reviewer.
   (Mon 5 Oct 2026, 08:59 Malta). Give file, problem, fix. End with a verdict.
 
 Project rules:
-- `match.py` and all arithmetic are plain Python with pytest tests. No model
-  calls there. Use `decimal.Decimal` for money, never float.
-- The only AI at runtime is a local open-weight model through Ollama. Never add
-  a hosted or closed API.
-- Sample invoices are synthetic. No real supplier or customer data.
-- Python 3.9+ compatible. Shapes come from `models.py`; do not redefine them.
+- The only AI at runtime is Gemma: local Ollama (`gemma4:e4b`) for
+  development, or Cloudflare Workers AI (`@cf/google/gemma-4-26b-a4b-it`) for
+  the hosted public demo. Both go through `app/model_adapter.py`. Never add
+  a closed or hosted proprietary model API.
+- `app/ledger.py` and all arithmetic are plain Python with pytest tests. No
+  model calls there. Quantities are ints — see `app/models.py` (`qty: int`
+  on `ParsedLine`, `Movement`, `PostLine`). No floats.
+- Sample and demo data are synthetic. No real supplier, customer, or stock
+  data.
+- Python 3.9+ compatible.
+- Shapes come from `app/models.py`; do not redefine them.

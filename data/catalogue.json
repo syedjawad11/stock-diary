@@ -1,0 +1,160 @@
+{
+  "_note": "SYNTHETIC demo data. Drafted by local Gemma 4 (e4b), checked and edited by hand.",
+  "products": [
+    {
+      "id": "basmati-5kg",
+      "name_en": "Premium Basmati Rice (5kg)",
+      "name_ur": "باسمتی چاول (5 کلو)",
+      "aliases": [
+        "basmati rice 5kg",
+        "basmati chawal",
+        "باسمتی چاول",
+        "basmati 5kg",
+        "basmati"
+      ],
+      "unit": "carton",
+      "low_threshold": 8,
+      "opening_qty": 7
+    },
+    {
+      "id": "sella-rice-25kg",
+      "name_en": "Sella Rice (25kg)",
+      "name_ur": "سیلا چاول (25 کلو)",
+      "aliases": [
+        "sella rice 25kg",
+        "sella chawal",
+        "سیلا چاول",
+        "sella 25kg",
+        "rice 25kg"
+      ],
+      "unit": "bag",
+      "low_threshold": 3,
+      "opening_qty": 50
+    },
+    {
+      "id": "red-chilli-powder",
+      "name_en": "Red Chilli Powder (Laal Mirch)",
+      "name_ur": "لال مرچ پاؤڈر",
+      "aliases": [
+        "laal mirch powder",
+        "red chilli powder",
+        "لال مرچ",
+        "mirch powder",
+        "laal mirch",
+        "lal mirch",
+        "mirch"
+      ],
+      "unit": "packet",
+      "low_threshold": 7,
+      "opening_qty": 3
+    },
+    {
+      "id": "turmeric-haldi",
+      "name_en": "Turmeric Powder (Haldi)",
+      "name_ur": "ہلدی پاؤڈر",
+      "aliases": [
+        "haldi powder",
+        "turmeric haldi",
+        "ہلدی",
+        "haldi"
+      ],
+      "unit": "packet",
+      "low_threshold": 5,
+      "opening_qty": 15
+    },
+    {
+      "id": "cooking-oil-5l",
+      "name_en": "Cooking Oil (5L Tin)",
+      "name_ur": "کھانے کا تیل (5 لیٹر)",
+      "aliases": [
+        "cooking oil 5l",
+        "tel 5l",
+        "کھانے کا تیل",
+        "oil tin",
+        "oil",
+        "tel",
+        "ghee tel"
+      ],
+      "unit": "tin",
+      "low_threshold": 9,
+      "opening_qty": 4
+    },
+    {
+      "id": "sugar-50kg",
+      "name_en": "Refined Sugar (50kg)",
+      "name_ur": "چینی (50 کلو)",
+      "aliases": [
+        "sugar 50kg",
+        "chini 50kg",
+        "چینی",
+        "sugar bag",
+        "chini",
+        "cheeni",
+        "sugar"
+      ],
+      "unit": "bag",
+      "low_threshold": 10,
+      "opening_qty": 12
+    },
+    {
+      "id": "black-tea",
+      "name_en": "Black Tea Leaves",
+      "name_ur": "سیاہ چائے",
+      "aliases": [
+        "black tea leaves",
+        "chai patti",
+        "سیاہ چائے",
+        "tea carton",
+        "chai",
+        "tea"
+      ],
+      "unit": "carton",
+      "low_threshold": 8,
+      "opening_qty": 40
+    },
+    {
+      "id": "khajoor-dates",
+      "name_en": "Premium Dates (Khajoor)",
+      "name_ur": "کھجور",
+      "aliases": [
+        "khajoor dates",
+        "dates wholesale",
+        "کھجور",
+        "khajoor box"
+      ],
+      "unit": "box",
+      "low_threshold": 6,
+      "opening_qty": 25
+    },
+    {
+      "id": "chickpeas-chanay",
+      "name_en": "Chickpeas (Chanay)",
+      "name_ur": "چنے",
+      "aliases": [
+        "chanay chickpeas",
+        "chickpeas wholesale",
+        "چنے",
+        "chanay bag"
+      ],
+      "unit": "bag",
+      "low_threshold": 7,
+      "opening_qty": 35
+    },
+    {
+      "id": "pink-salt",
+      "name_en": "Pink Himalayan Salt",
+      "name_ur": "گلابی نمک",
+      "aliases": [
+        "pink salt",
+        "himalayan salt",
+        "گلابی نمک",
+        "salt packet",
+        "namak",
+        "salt"
+      ],
+      "unit": "packet",
+      "low_threshold": 9,
+      "opening_qty": 18
+    }
+  ]
+}
