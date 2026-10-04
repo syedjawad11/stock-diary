@@ -35,6 +35,9 @@ Last updated: Sun 4 Oct 2026, ~16:00 Malta. Hamza Mart upgrade shipped and live.
 - [x] Demo video DONE: media/stock-diary-demo.mp4 (2:00, 1280x720, ElevenLabs voice, captions; git-ignored).
       Both backends shown (Cloudflare live + local Ollama). Pipeline in scratchpad/video
       (script.json, record.js, tts.sh, assemble.py). Next: Jawad watches it, uploads to YouTube unlisted.
+- [x] 18:30 post.md drafted (GPT-6 Sol), edited by Claude, critiqued by Sol (.agent/reviews/20261004-182115.md), fixes applied.
+      Cover at docs/cover.png (raw GitHub URL in front matter). README credits/limits + MIT LICENSE done.
+      Left: VIDEO_URL, one [JAWAD: ...] sentence, then paste into DEV and publish.
 - [x] Doubled-bracket fix in low-stock answers + README "Try it live" (Codex, verified)
 
 ## Next (in order)
