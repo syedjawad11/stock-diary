@@ -162,3 +162,13 @@ costs build time the post needs more.
   labelled fictional; the post must not imply the friend approved it.
   Work split: Codex workers on ledger, questions, frontend in parallel;
   Claude on main.py, API.md, models.py and API tests.
+- 4 Oct ~16:00: Upgrade shipped (54f5522) and live. 42 tests green.
+  Browser click-through (EN/UR, 390px and 1280px) found two frontend bugs:
+  restock table read the wrong field, mobile badges stretched; fixed.
+  Frontend reformatted with Prettier because the worker emitted one-line
+  CSS/HTML. Sol's diff review (`.agent/reviews/20261004-154027.md`) found
+  three real bugs, all fixed with tests: unit-mismatch could be bypassed by
+  editing qty (now tracked separately from stock problems, cleared only by
+  "Use <unit>"); insufficient stock hid a mismatch; reset during a parse
+  gave a 500 (now a clean `unknown_product`). Found that Render had never
+  auto-deployed from GitHub; deployed via the Render API instead.

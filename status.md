@@ -1,7 +1,7 @@
 # Status: HF26 Stock Diary (workspace memory)
 
 Read this first when resuming. Update it at every milestone or break.
-Last updated: Sun 4 Oct 2026, ~16:05 Malta. Hamza Mart upgrade shipped and live.
+Last updated: Sun 4 Oct 2026, ~16:00 Malta. Hamza Mart upgrade shipped and live. Jawad on a short break.
 
 ## Deadline
 - Submission closes Mon 5 Oct 06:59 UTC (08:59 Malta).
@@ -17,7 +17,7 @@ Last updated: Sun 4 Oct 2026, ~16:05 Malta. Hamza Mart upgrade shipped and live.
 - Model: Gemma 4 26B A4B on Cloudflare Workers AI (thinking disabled). Local dev: Ollama gemma4:e4b.
 - Secrets: only in `.env` (git-ignored). Keys: MODEL_BACKEND, OLLAMA_MODEL, CF_ACCOUNT_ID,
   CF_API_TOKEN, SESSION_SECRET, RENDER_API_KEY. Never print values.
-- Last commit: 54f5522 (deployed, live verified). Tests: 42 passing (`.venv/bin/python -m pytest -q`).
+- Last code commit: 54f5522 (deployed, live verified); later commits are records only. Tests: 42 passing (`.venv/bin/python -m pytest -q`).
 
 ## Done
 - [x] Workspace setup (Ollama, Codex CLI, venv, git)
@@ -32,10 +32,9 @@ Last updated: Sun 4 Oct 2026, ~16:05 Malta. Hamza Mart upgrade shipped and live.
 - [x] Doubled-bracket fix in low-stock answers + README "Try it live" (Codex, verified)
 
 ## Next (in order)
-1. Jawad reviews the new UI; post must say Hamza Mart is fictional (friend is a wholesaler, handover pending).
-2. Jawad tries real entries on his phone; fix what feels wrong.
-3. Sol review of the full diff (`scripts/codex-review.sh`).
-4. README: credits, limits, MIT licence (check LICENSE exists).
+1. Jawad reviews the new UI on his phone (EN + Urdu); fix what feels wrong. Redeploy by API after any push.
+2. README: credits, known limits, MIT licence (check LICENSE exists). Features section already done.
+3. Final Sol check of the whole repo diff before freeze (upgrade diff already reviewed at 15:40).
 5. Record the demo video (60–90 s).
 6. Code freeze ~20:00.
 7. post.md: Codex worker drafts from the template, Claude edits, Sol critiques. Tags: devchallenge, weekendchallenge, hf26challenge.
@@ -50,6 +49,19 @@ Gemma, Render, GitHub Copilot (via Actions CI), Entire (if painless), ElevenLabs
 - Synthetic data only. Don't invent the friend's feedback; the post says handover is pending.
 - Claude Code and Codex are build tools only, never a runtime dependency.
 
+## Post material (collect here as we go)
+- Hamza Mart is a fictional shop; the friend is a wholesaler and has not seen it yet. Say both plainly.
+- Upgrade story (15:15–16:00): Sol brainstormed and ranked ideas; three GPT-6 Sol workers built ledger,
+  restock intent and frontend in parallel against a written contract (API.md); Claude wired main.py and
+  tests; browser click-through caught 2 frontend bugs; Sol's diff review caught 3 real bugs
+  (unit-check bypass, mismatch hidden by stock shortage, reset-during-parse 500). All fixed before deploy.
+- Principle held: Gemma reads language and picks intents; Python computes every number (reorder list
+  = minimum to clear the low-stock alert, not a forecast).
+- Screenshots of the new UI: scratchpad only (not in repo); retake for the post.
+
 ## Open issues / notes
+- Render GitHub auto-deploy not firing (autoDeploy=yes). Optional fix: connect the Render GitHub app.
+- Minor, accepted: frontend Reset doesn't discard an in-flight AI parse; backend returns a clean
+  unknown_product error, so nothing breaks.
 - Starter upgrade only if Jawad adds a card on Render Billing.
 - Quotas are in-memory; a Render restart clears them (acceptable).
