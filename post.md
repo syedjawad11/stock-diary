@@ -9,23 +9,23 @@ cover_image: https://raw.githubusercontent.com/syedjawad11/stock-diary/main/docs
 
 ## What I Built
 
-My friend Hamza owns a grocery store called Hamza Mart. He keeps stock in his head and on paper, and the notes move between Urdu, Roman Urdu, and English. [JAWAD: one sentence on how you know Hamza or a moment you saw him counting stock.]
+My friend Hamza runs Hamza Mart, a grocery store. His stock records live in his head and on paper, in Urdu, Roman Urdu, and English. I wanted to turn those same notes into balances he could check. [JAWAD: one sentence on how you know Hamza or a moment you saw him counting stock.]
 
-I built Stock Diary so he can record stock in the language he already uses. He can type, “20 carton basmati aaye, 5 packet haldi nikle,” and see proposed movements: which product, how many, which unit, and whether stock came in or went out. The proposal also shows the balance before and after. He can edit it or confirm it. Nothing is saved until he confirms.
+Stock Diary turns “20 carton basmati aaye, 5 packet haldi nikle” (“20 cartons of basmati came in, 5 packets of turmeric went out”) into two proposed stock movements. Each shows the product, quantity, unit, direction, and the balance before and after. He can correct the proposal before confirming it. Nothing is saved until he confirms.
 
 That confirmation matters. A plausible sentence is not a reliable stock entry if the unit is wrong. If Hamza writes “5 bori laal mirch” but chilli is counted in packets, Stock Diary stops the entry until he picks the right unit. It also stops an outgoing movement of five when only three are left. The model helps read the sentence; plain Python checks the numbers and posts the confirmed movement to a SQLite ledger.
 
-He can ask “kis cheez ka stock kam hai?” for low stock, “kal kya mangwana hai?” for a reorder list, or ask for one product's balance or today's movements. The reorder list gives the minimum quantity needed to clear each low-stock alert. It is not a sales forecast. For tasks that need no language interpretation, he can add or remove stock manually, add his own products, search, and filter for Low or Out items. The interface also has a full Urdu layout with right-to-left text, dark mode, and a phone-sized view.
+He can also ask “kis cheez ka stock kam hai?” (“What is running low?”) or “kal kya mangwana hai?” (“What should I order tomorrow?”). Gemma only works out which question he is asking; Python answers from the ledger. The reorder list gives the minimum needed to clear each low-stock alert, not a forecast. Manual entries and new products cover the everyday work, with a full Urdu interface (right to left) and a layout that fits a phone.
 
 I built this from what I know of how Hamza works, not from a session with him. He has not used it yet, and the handover is pending. All stock figures in the public demo are sample data, not Hamza Mart's real stock.
 
 ## Demo
 
-Try the [live Stock Diary demo](https://stock-diary-lscy.onrender.com). It runs on Render's free plan, so the first load after a period of inactivity can take about a minute. The video shows the hosted and local Gemma backends running the same app code.
+Try the [live Stock Diary demo](https://stock-diary-lscy.onrender.com): enter the sentence above, check the proposed balances, then confirm and look at the updated stock. Try “5 bori laal mirch aayi” to see the unit warning. Render's free plan can take about a minute to wake after inactivity. The video shows hosted and local Gemma running the same app code.
 
 {% embed VIDEO_URL %}
 
-The public demo gives each visitor a separate sandbox through a signed cookie. You can reset yours. Sandboxes are purged after 24 hours, and each visitor is limited to five model calls per minute and 30 per day, with a global daily cap as well. These limits keep the demo inside Cloudflare's free allowance.
+Each browser gets a separate sandbox with a reset button. AI requests are limited to five per minute and 30 per day per visitor, with extra per-IP and global daily limits. These keep usage low; they don't guarantee the demo stays inside Cloudflare's free allowance.
 
 ## Code
 
@@ -58,13 +58,15 @@ After that change, the hosted model completed all 12 test cases in roughly one t
 
 The rest of the stack is FastAPI, Pydantic, SQLite, uvicorn, httpx, pytest, and a vanilla JavaScript frontend. Render serves the backend and frontend; I triggered deploys through the Render API. There are 42 pytest tests, and GitHub Actions runs them on Python 3.9 and 3.12 on every push.
 
-The checks caught more than parsing mistakes. A review of the code found that editing a quantity could bypass the unit warning, that an insufficient-stock error could hide a unit mismatch, and that resetting a sandbox during a parse could return a server error. I fixed those cases with tests. A browser click-through at phone and desktop widths caught two frontend issues, which I also fixed. The demo video was recorded with Playwright, and I generated its narration with ElevenLabs.
+The checks caught more than parsing mistakes. A review of the code found that editing a quantity could bypass the unit warning, that an insufficient-stock error could hide a unit mismatch, and that resetting a sandbox during a parse could return a server error. I fixed the frontend unit-warning logic and added API regression tests for the mismatch response and for a reset during a parse. A browser click-through at phone and desktop widths caught two frontend issues, which I also fixed. The demo video was recorded with Playwright, and I generated its narration with ElevenLabs.
 
 ## Why Does Open Innovation Matter?
 
-A small grocery store cannot assume it can pay a per-call model bill indefinitely. An open-weight model can run on a laptop Hamza already owns, with no model subscription. Local inference also means his stock entries can stay on that machine. His stock is his business information, and the app should give him a way to keep it at the shop.
+A small grocery store can't plan around a per-call model bill. Open weights give Stock Diary a local option: I ran Gemma 4 through Ollama on my 16 GB MacBook with no cloud keys at all. That shows a working alternative to paying a provider for every entry. It doesn't yet tell me what hardware Hamza would need, and that's part of the handover.
 
-The hosted demo does send model requests to Cloudflare's servers. I chose that route so people can try the app in a browser. The model itself is open-weight, and the local Ollama route is the part that lets the same product work without a cloud model provider. Switching `MODEL_BACKEND` moves between those routes without rewriting the stock workflow. If a host changes its prices or stops serving the model, that local path still exists.
+His stock is his business information. The public demo sends requests to Cloudflare so anyone can try it in a browser, but in a local setup every entry stays on the machine running the app. Both routes go through the same model adapter and the same stock workflow, so switching `MODEL_BACKEND` changes the inference provider without touching the ledger. If a host changes its prices or stops serving the model, the local path still works.
+
+The code is MIT-licensed, so another shop can adapt the catalogue, the product aliases and the interface for its own stock.
 
 Open weights also let me test the language Hamza actually uses: Roman Urdu mixed with English and Urdu script. A rigid stock form would make him translate his own notes into the software's categories before recording them. Here the model proposes the interpretation, but the review screen and Python checks keep that flexibility from silently changing a balance.
 
@@ -85,7 +87,7 @@ I did not record a DevRelay session. The repository keeps the [task briefs and r
 
 - **Best Use of Gemma:** Gemma is the only runtime AI and runs both locally through Ollama and on Cloudflare Workers AI.
 - **Best Use of Render:** Render hosts the FastAPI backend and frontend that call Gemma for the public demo.
-- **Best Use of GitHub Copilot:** GitHub Actions runs all 42 tests on Python 3.9 and 3.12 on every push, so a broken ledger can't reach the live demo unnoticed.
+- **Best Use of GitHub Copilot:** GitHub Actions runs all 42 tests on Python 3.9 and 3.12 on every push, so a ledger regression shows up on the commit that caused it.
 - **Best Use of ElevenLabs:** ElevenLabs generated the narration for the demo video.
 
 Next I want to hand Stock Diary to Hamza and see how it fits a real day at Hamza Mart. If he wants it, voice input in Urdu is the next feature I would try. If you have built a tool for a shopkeeper, how did you handle notes that switch between scripts and product names?

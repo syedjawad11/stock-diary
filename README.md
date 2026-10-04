@@ -64,8 +64,8 @@ day per IP, 400 per day across the whole demo. Manual stock changes don't
 count. Limits are in memory, so a server restart clears them.
 
 The public demo uses a synthetic catalogue only. Each visitor gets an
-isolated sandbox (signed cookie) with a reset button; sandboxes purge after
-24 hours.
+isolated sandbox (signed cookie) with a reset button. Pressing Reset also
+deletes sandboxes that have been inactive for more than 24 hours.
 
 ## Credits
 
