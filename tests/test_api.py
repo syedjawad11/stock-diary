@@ -85,7 +85,7 @@ def test_rate_limit_per_minute(client, monkeypatch):
 def test_ask_low_stock_uses_code_numbers(client, monkeypatch):
     monkeypatch.setattr(questions, "generate_json", lambda s, u, m: Question(intent=Intent.LOW_STOCK))
     res = client.post("/api/ask", json={"text": "kya kam hai"}).json()
-    assert "Red Chilli" in res["answer_en"] or "Chilli" in res["answer_en"]
+    assert "Laal mirch" in res["answer_en"]
     assert "3" in res["answer_en"]
 
 

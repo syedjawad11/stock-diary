@@ -3,7 +3,7 @@
   "products": [
     {
       "id": "basmati-5kg",
-      "name_en": "Premium Basmati Rice (5kg)",
+      "name_en": "Basmati rice 5kg",
       "name_ur": "باسمتی چاول (5 کلو)",
       "aliases": [
         "basmati rice 5kg",
@@ -18,7 +18,7 @@
     },
     {
       "id": "sella-rice-25kg",
-      "name_en": "Sella Rice (25kg)",
+      "name_en": "Sella rice 25kg",
       "name_ur": "سیلا چاول (25 کلو)",
       "aliases": [
         "sella rice 25kg",
@@ -33,7 +33,7 @@
     },
     {
       "id": "red-chilli-powder",
-      "name_en": "Red Chilli Powder (Laal Mirch)",
+      "name_en": "Laal mirch powder",
       "name_ur": "لال مرچ پاؤڈر",
       "aliases": [
         "laal mirch powder",
@@ -50,7 +50,7 @@
     },
     {
       "id": "turmeric-haldi",
-      "name_en": "Turmeric Powder (Haldi)",
+      "name_en": "Haldi powder",
       "name_ur": "ہلدی پاؤڈر",
       "aliases": [
         "haldi powder",
@@ -64,7 +64,7 @@
     },
     {
       "id": "cooking-oil-5l",
-      "name_en": "Cooking Oil (5L Tin)",
+      "name_en": "Cooking oil 5L",
       "name_ur": "کھانے کا تیل (5 لیٹر)",
       "aliases": [
         "cooking oil 5l",
@@ -83,7 +83,7 @@
     },
     {
       "id": "sugar-50kg",
-      "name_en": "Refined Sugar (50kg)",
+      "name_en": "Sugar 50kg",
       "name_ur": "چینی (50 کلو)",
       "aliases": [
         "sugar 50kg",
@@ -100,7 +100,7 @@
     },
     {
       "id": "black-tea",
-      "name_en": "Black Tea Leaves",
+      "name_en": "Black tea",
       "name_ur": "سیاہ چائے",
       "aliases": [
         "black tea leaves",
@@ -116,7 +116,7 @@
     },
     {
       "id": "khajoor-dates",
-      "name_en": "Premium Dates (Khajoor)",
+      "name_en": "Khajoor (dates)",
       "name_ur": "کھجور",
       "aliases": [
         "khajoor dates",
@@ -130,7 +130,7 @@
     },
     {
       "id": "chickpeas-chanay",
-      "name_en": "Chickpeas (Chanay)",
+      "name_en": "Chanay (chickpeas)",
       "name_ur": "چنے",
       "aliases": [
         "chanay chickpeas",
@@ -144,7 +144,7 @@
     },
     {
       "id": "pink-salt",
-      "name_en": "Pink Himalayan Salt",
+      "name_en": "Pink salt",
       "name_ur": "گلابی نمک",
       "aliases": [
         "pink salt",

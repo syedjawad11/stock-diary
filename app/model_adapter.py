@@ -11,8 +11,10 @@ import time
 from typing import Optional, Type, TypeVar
 
 import httpx
+from dotenv import load_dotenv
 from pydantic import BaseModel, ValidationError
 
+load_dotenv()  # local .env, if present; real environment variables win
 T = TypeVar("T", bound=BaseModel)
 
 BACKEND = os.environ.get("MODEL_BACKEND", "ollama")
@@ -48,12 +50,14 @@ def _call_ollama(messages: list, schema: dict) -> str:
 
 
 def _call_cloudflare(messages: list, schema: dict) -> str:
-    account = os.environ["CF_ACCOUNT_ID"]
-    token = os.environ["CF_API_TOKEN"]
+    account = os.environ["CF_ACCOUNT_ID"].strip()
+    token = os.environ["CF_API_TOKEN"].strip()
     resp = httpx.post(
         f"https://api.cloudflare.com/client/v4/accounts/{account}/ai/run/{CF_MODEL}",
         headers={"Authorization": f"Bearer {token}"},
         json={"messages": messages, "temperature": 0, "max_completion_tokens": 600,
+              # Gemma 4 thinks by default; the reasoning would eat the token budget. Off.
+              "chat_template_kwargs": {"enable_thinking": False},
               "response_format": {"type": "json_schema", "json_schema": schema}},
         timeout=TIMEOUT,
     )
