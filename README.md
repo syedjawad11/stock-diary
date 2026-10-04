@@ -56,11 +56,12 @@ SESSION_SECRET=...
 DB_PATH=...
 ```
 
-Render credits: (placeholder — promo claimed, balance to confirm before
-publishing)
+Hosting: Render web service on the free plan (sleeps after 15 minutes idle,
+about a minute to wake).
 
-Rate limits: (placeholder — fill in the actual per-visitor and global caps
-before publishing)
+Rate limits on model calls: 5 per minute and 30 per day per visitor, 60 per
+day per IP, 400 per day across the whole demo. Manual stock changes don't
+count. Limits are in memory, so a server restart clears them.
 
 The public demo uses a synthetic catalogue only. Each visitor gets an
 isolated sandbox (signed cookie) with a reset button; sandboxes purge after
@@ -68,11 +69,28 @@ isolated sandbox (signed cookie) with a reset button; sandboxes purge after
 
 ## Credits
 
-(filled in before submission — model, libraries, any non-trivial code reused)
+- [Gemma 4](https://ai.google.dev/gemma) by Google, an open-weight model: the only AI the app runs.
+  Hosted through [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/), local through [Ollama](https://ollama.com).
+- [FastAPI](https://fastapi.tiangolo.com), [Pydantic](https://docs.pydantic.dev), [uvicorn](https://www.uvicorn.org),
+  [httpx](https://www.python-httpx.org), [itsdangerous](https://itsdangerous.palletsprojects.com),
+  [python-dotenv](https://github.com/theskumar/python-dotenv), [pytest](https://pytest.org), SQLite.
+- Fonts: Inter and Noto Nastaliq Urdu (Google Fonts).
+- No code was copied from other projects. Built with Claude Code (orchestration) and OpenAI Codex
+  (worker and reviewer models) as development tools; neither runs inside the app. Task briefs and
+  reviews are in [`.agent/`](.agent/).
+- Demo video narration: ElevenLabs. The demo catalogue was drafted by local Gemma and checked by hand.
 
 ## Known limits
 
-(filled in before submission)
+- Not yet handed over to Hamza; no testing in the real shop yet.
+- Parsing accuracy was measured on 12 sentences (12/12 on both backends), not at scale.
+- No voice input, no photos of bills, no login: each browser gets its own sandbox.
+- Free hosting means a cold start after idle.
+- Units are checked by word, not converted (no cartons-to-packets maths).
+
+## Licence
+
+MIT, see [LICENSE](LICENSE).
 
 ## Commits after the submission deadline
 
