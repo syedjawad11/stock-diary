@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 from .model_adapter import generate_json
 from .models import ParsedLine, ParseResult, Product
 
-SYSTEM = """You read stock entries for a small food wholesaler in Pakistan.
+SYSTEM = """You read stock entries for a small grocery store in Pakistan.
 The user writes in English, Roman Urdu, Urdu script, or a mix.
 Return every stock movement in the sentence as JSON: {"lines": [...]}.
 Each line: product_text (the user's words for the product), product_id (the matching id

@@ -2,17 +2,17 @@
 
 ## Try it live
 
-Try the [live demo](https://stock-diary-lscy.onrender.com), where each visitor gets their own sandbox seeded with synthetic stock. It runs on Render's free plan, so the first load after idle can take about a minute. The model is Gemma 4 (26B A4B) on Cloudflare Workers AI, with limits of 5 model calls per minute and 30 per day per visitor.
+Try the [live demo](https://stock-diary-lscy.onrender.com), where each visitor gets their own sandbox seeded with sample stock. It runs on Render's free plan, so the first load after idle can take about a minute. The model is Gemma 4 (26B A4B) on Cloudflare Workers AI, with limits of 5 model calls per minute and 30 per day per visitor.
 
-A bilingual (Urdu, Roman Urdu, English) stock book for a small import/export
-and wholesale business. Type a line like "20 carton basmati aaye, 5 laal
+A bilingual (Urdu, Roman Urdu, English) stock book for Hamza Mart, a small
+grocery store run by Jawad's friend Hamza. Type a line like "20 carton basmati aaye, 5 laal
 mirch nikle"; Gemma parses it into proposed stock movements, you confirm, and
 plain Python keeps the ledger, running balances, and low-stock flags. Ask
 "kis cheez ka stock kam hai?" and get a plain-language answer, filled in from
 the real numbers — Gemma only picks the question's intent, never the figures.
 
-The demo is dressed as the warehouse stock account of **Hamza Mart**, a
-fictional shop. All products and quantities are synthetic.
+**Hamza Mart** is a real shop. The products and quantities in the demo are
+sample data, not Hamza's real stock.
 
 What you can do:
 
@@ -29,8 +29,8 @@ What you can do:
 - Inventory with search, Low / Out of stock filters, and overview counts.
 
 Built for the DEV Hacktoberfest Weekend Challenge: Build for a Friend (Oct
-2026), for a friend of Jawad's who runs a small import/export and wholesale
-business in Pakistan (rice, spices, packaged food, cartons).
+2026), for Hamza, a friend of Jawad's who owns a grocery store in Pakistan (rice,
+spices, packaged food, cartons).
 
 ## Local setup
 

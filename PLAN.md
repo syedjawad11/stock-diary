@@ -6,8 +6,8 @@ code existed.
 
 ## Who it is for
 
-Jawad's friend, who runs a small import/export and wholesale business in
-Pakistan: rice, spices, packaged food, cartons. He tracks stock in his head
+Hamza, Jawad's friend, who owns a grocery store, Hamza Mart, in Pakistan:
+rice, spices, packaged food, cartons. He tracks stock in his head
 and on paper, in a mix of Urdu, Roman Urdu, and English.
 
 The friend could not be reached this weekend. This design is built from what
@@ -149,7 +149,7 @@ costs build time the post needs more.
 - 4 Oct ~15:00: Low-stock answers changed to "name: qty; ..." so names
   that already contain brackets don't double them (Codex worker, 22 tests green).
 - 4 Oct ~15:15: Jawad: the app looks too simple. Asked for a professional
-  warehouse-account feel for a fictional retail shop "Hamza Mart", manual
+  warehouse-account feel for the shop "Hamza Mart", manual
   add/remove stock, adding new products, and more AI; login skipped. GPT-6.1
   Sol brainstorm (`.agent/reviews/20261004-1515-ideas.md`) ranked ideas by
   value/cost. Adopted: Hamza Mart branding, desktop warehouse layout, overview
@@ -159,7 +159,8 @@ costs build time the post needs more.
   (code computes "minimum to clear the low alert"), unit-mismatch guard,
   minute-vs-day rate-limit messages. Cut: AI product prefill, daily report,
   CSV, charts, product edit/delete, valuation, forecasting. Hamza Mart is
-  labelled fictional; the post must not imply the friend approved it.
+  later corrected: Hamza Mart is real (see 16:30 entry); the post must not
+  imply the friend approved it.
   Work split: Codex workers on ledger, questions, frontend in parallel;
   Claude on main.py, API.md, models.py and API tests.
 - 4 Oct ~16:00: Upgrade shipped (54f5522) and live. 42 tests green.
@@ -172,3 +173,11 @@ costs build time the post needs more.
   "Use <unit>"); insufficient stock hid a mismatch; reset during a parse
   gave a 500 (now a clean `unknown_product`). Found that Render had never
   auto-deployed from GitHub; deployed via the Render API instead.
+- 4 Oct ~16:30: Correction from Jawad: Hamza is a real person and THE friend
+  this is built for; he owns a grocery store, Hamza Mart. The earlier
+  "fictional shop" and "importer/wholesaler" wording was wrong and is removed
+  from the UI, README and prompts (prompts now say "small grocery store").
+  Public naming: first name and shop name only, no surname, city or photo.
+  Stock figures stay sample data, labelled as such. Handover still pending;
+  no invented feedback. Demo video will show both backends: hosted Gemma on
+  Cloudflare Workers AI and local Gemma via Ollama.

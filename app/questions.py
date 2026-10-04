@@ -5,7 +5,7 @@ from typing import Dict, List
 from .model_adapter import generate_json
 from .models import Intent, Movement, Product, Question, StockRow
 
-SYSTEM = """Classify a stock question from a food wholesaler (English, Roman Urdu or Urdu).
+SYSTEM = """Classify a stock question from a grocery store owner (English, Roman Urdu or Urdu).
 Return JSON {"intent": ..., "product_id": ...}.
 intent is one of:
 - low_stock: what is running low / kya kam hai / کیا کم ہے

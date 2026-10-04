@@ -21,7 +21,7 @@ Last updated: Sun 4 Oct 2026, ~16:00 Malta. Hamza Mart upgrade shipped and live.
 
 ## Done
 - [x] Workspace setup (Ollama, Codex CLI, venv, git)
-- [x] Idea picked: Stock Diary (bilingual stock book for the importer friend in Pakistan)
+- [x] Idea picked: Stock Diary (bilingual stock book for Hamza, a friend who owns a grocery store, Hamza Mart)
 - [x] Backend: ledger (Codex), model adapter, parse, questions, API, sandboxes, rate limits
 - [x] Frontend: mobile-first, EN/Urdu toggle with RTL, dark mode (Sonnet)
 - [x] CI: GitHub Actions on py3.9 and 3.12
@@ -50,7 +50,8 @@ Gemma, Render, GitHub Copilot (via Actions CI), Entire (if painless), ElevenLabs
 - Claude Code and Codex are build tools only, never a runtime dependency.
 
 ## Post material (collect here as we go)
-- Hamza Mart is a fictional shop; the friend is a wholesaler and has not seen it yet. Say both plainly.
+- Hamza is real and is THE friend; he owns the grocery store Hamza Mart. Name him by first name + shop only.
+  Stock figures are sample data. He has not seen it yet; say so plainly. (Corrected 16:30; earlier notes said fictional.)
 - Upgrade story (15:15–16:00): Sol brainstormed and ranked ideas; three GPT-6 Sol workers built ledger,
   restock intent and frontend in parallel against a written contract (API.md); Claude wired main.py and
   tests; browser click-through caught 2 frontend bugs; Sol's diff review caught 3 real bugs
