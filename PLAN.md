@@ -137,3 +137,14 @@ costs build time the post needs more.
   and Codex never run inside the shipped app, only Gemma does. Worth a line
   in the post — open orchestration on the build side, open-weight model at
   runtime.
+- 4 Oct ~14:30: Cloudflare Gemma 4 returned empty content on multi-line
+  entries because thinking ate the token budget. Fixed with
+  `chat_template_kwargs: {enable_thinking: false}`: 12/12 on the spike,
+  1–2 s, ~9 neurons per parse. Local e4b scores 11/12 at 4–9 s.
+- 4 Oct ~14:40: Repo created and pushed: github.com/syedjawad11/stock-diary (public).
+- 4 Oct ~15:00: Deployed to Render on the **free** plan, because Starter needs a
+  card on file. Live at https://stock-diary-lscy.onrender.com, verified
+  end to end. Trade-off: about a 1-minute cold start after 15 min idle.
+  Upgrade to Starter (paid from the $50 credit) if Jawad adds a card.
+- 4 Oct ~15:00: Low-stock answers changed to "name: qty; ..." so names
+  that already contain brackets don't double them (Codex worker, 22 tests green).
