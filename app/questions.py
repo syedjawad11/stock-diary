@@ -42,8 +42,8 @@ def answer(q: Question, stock: List[StockRow], today_moves: List[Movement]) -> D
         low = [row for row in stock if row.is_low]
         if not low:
             return {"answer_en": "Nothing is low right now.", "answer_ur": "ابھی کوئی چیز کم نہیں ہے۔"}
-        en = ", ".join(f"{r.product.name_en} ({_qty_en(r.qty, r.product.unit)})" for r in low)
-        ur = "، ".join(f"{r.product.name_ur} ({_qty_ur(r.qty, r.product.unit)})" for r in low)
+        en = "; ".join(f"{r.product.name_en}: {_qty_en(r.qty, r.product.unit)}" for r in low)
+        ur = "؛ ".join(f"{r.product.name_ur}: {_qty_ur(r.qty, r.product.unit)}" for r in low)
         return {"answer_en": f"Running low: {en}.", "answer_ur": f"کم سٹاک: {ur}۔"}
     if q.intent == Intent.BALANCE and q.product_id in by_id:
         r = by_id[q.product_id]

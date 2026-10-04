@@ -1,5 +1,9 @@
 # Stock Diary
 
+## Try it live
+
+Try the [live demo](https://stock-diary-lscy.onrender.com), where each visitor gets their own sandbox seeded with synthetic stock. It runs on Render's free plan, so the first load after idle can take about a minute. The model is Gemma 4 (26B A4B) on Cloudflare Workers AI, with limits of 5 model calls per minute and 30 per day per visitor.
+
 A bilingual (Urdu, Roman Urdu, English) stock book for a small import/export
 and wholesale business. Type a line like "20 carton basmati aaye, 5 laal
 mirch nikle"; Gemma parses it into proposed stock movements, you confirm, and
